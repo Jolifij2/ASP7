@@ -1,0 +1,70 @@
+@model IEnumerable<DataSourcesApp.Models.Student>
+
+@{
+    ViewData["Title"] = "Список студентов";
+}
+
+<h1>Список студентов</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Добавить студента</a>
+</p>
+
+<!-- ===== Задание 2. Поиск ===== -->
+<form asp-action="Index" method="get">
+    <div class="form-group">
+        <label>Поиск по имени:</label>
+        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control" />
+        <br />
+        <button type="submit" class="btn btn-success">Найти</button>
+        <a asp-action="Index" class="btn btn-secondary">Сбросить</a>
+    </div>
+</form>
+
+@if (Model.Count() == 0)
+{
+    <p>Студентов пока нет.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <!-- ===== Задание 3. Сортировка ===== -->
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewData["NameSortParm"]"
+                       asp-route-searchString="@ViewData["CurrentFilter"]">Имя</a>
+                </th>
+                <th>
+                    <a asp-action="Index"
+                       asp-route-sortOrder="@ViewData["AgeSortParm"]"
+                       asp-route-searchString="@ViewData["CurrentFilter"]">Возраст</a>
+                </th>
+                <th>Группа</th>
+                <th>Город</th>
+                <th>Email</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@student.Id</td>
+                    <td>@student.Name</td>
+                    <td>@student.Age</td>
+                    <td>@student.Group</td>
+                    <td>@student.City</td>
+                    <td>@student.Email</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@student.Id">Подробнее</a> |
+                        <a asp-action="Edit" asp-route-id="@student.Id">Редактировать</a> |
+                        <a asp-action="Delete" asp-route-id="@student.Id">Удалить</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
